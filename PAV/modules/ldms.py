@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/env python
 
 """ plug-in that supports using the LDMS tool 
 """

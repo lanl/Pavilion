@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/env python
 
 """ plugin that implements the get_results command
 """

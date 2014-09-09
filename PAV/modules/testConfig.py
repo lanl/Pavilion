@@ -1,35 +1,10 @@
-#!python
+#!/usr/bin/env python
 
 import sys
 import os
 from yaml import load, YAMLError
 import json
 import logging
-
-
-def recurse(x):
-    checking_elem = x
-    try:
-        for k, v in x.items():
-            if isinstance(v, dict):
-                recurse(v)
-            else:
-                print "key: {}, val: {}".format(k, v)
-    except:
-        print " Error checking element: ", checking_elem
-
-
-def flatten_dict(d):
-    def items():
-        for key, value in d.items():
-            if isinstance(value, dict):
-                for subkey, subvalue in flatten_dict(value).items():
-                    yield key + "." + subkey, subvalue
-            else:
-                yield key, value
-                
-    return dict(items())
-
 
 # Recursive function to merge nested dictionaries
 # with obj_2 winning conflicts

@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/env python
 """  Implementation of Moab Job Controller  """
 
 import sys, os

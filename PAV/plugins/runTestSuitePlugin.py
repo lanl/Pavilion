@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/env python
 
 """ plug-in that implements the run_test_suite command 
 """
@@ -103,25 +103,8 @@ class RunTestSuite(IPlugin):
                         for _ in range(te.get_run_times()):
                             self.job_dispatcher(te)
 
-                 #   count = 1
-                    # If there is one test variation then allow multiple runs,
-                    # otherwise run only ONCE for each variation
-                 #   if (test_variants.__len__()  == 1):
-                 #      count = te.get_count()
-
-                    # new process for each test variation
-                #    for test_entry in test_variants:
-                 #   for test_entry in test_variants.__iter__():
-                 #       print var, type(var)
-                 #       for _ in range(count):
-                #          if isinstance(var, tuple):
-                 #               self.logger.info('dispatch: %s, variation: (%s x %s)' % (name, var[0], var[1]))
-                 #           else:
-                #             self.logger.info('dispatch: %s, variations: %s' % (name, var))
-                 #           job_dispatcher(name, params, var)
-                 #           job_dispatcher2(test_entry)
         except EnvironmentError as err:
-            print "  Error: could not access test suite %s" % args['testSuite']
+            print "  Error: %s" % err
             sys.exit()
         
 

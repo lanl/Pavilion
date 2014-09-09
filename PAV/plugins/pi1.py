@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/env python
 """ skeleton example plug-in that implements a new command 
 """
 

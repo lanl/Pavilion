@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/env python
 """  Base class to provide a template for all
      subsequent implementations of job launchers to
      follow (i.e. - Moab, slurm, ...)

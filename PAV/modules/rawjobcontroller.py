@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/env python
 """  Implementation raw Job Control mechanism  """
 
 import sys,os
