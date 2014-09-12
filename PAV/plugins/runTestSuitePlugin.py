@@ -53,7 +53,7 @@ class RunTestSuite(IPlugin):
     # so that it can called when it's selected
     def cmd(self, args):
 
-        if args['verbose']:
+        if args.get('verbose'):
             print "Command args -> %s" % args
             print "TestSuite search path -> " + os.path.dirname(os.path.realpath(args['testSuite']))
         
@@ -65,7 +65,7 @@ class RunTestSuite(IPlugin):
                 # Build the test configuration
                 #tc = YamlTestConfig(args['testSuite'], dts)
                 tc = YamlTestConfig(args['testSuite'])
-                if args['verbose']:
+                if args.get('verbose'):
                     print "User test suite:"
                     utc = tc.get_user_test_config()
                     print "  %s" % utc

@@ -18,7 +18,7 @@ class TestEntry():
         self.eff_ppn = None
         self.this_dict[name] = values
         if args:
-            if args['verbose']:
+            if args.get('verbose'):
                 print "Process test suite entry: " + name
         self.logger = logging.getLogger('pth.' + my_name)
         self.logger.info('Process %s '% name)

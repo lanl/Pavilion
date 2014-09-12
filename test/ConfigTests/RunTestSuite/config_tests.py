@@ -23,20 +23,17 @@ class EnvironmentErrorTest(unittest.TestCase):
             pass
         os.chmod(file_name, 0000)
         with self.assertRaises(SystemExit):
-            self.suite_runner.cmd(
-                    {'verbose': True, 'testSuite': 'invalid_permissions'})
+            self.suite_runner.cmd({'testSuite': 'invalid_permissions'})
         os.remove(file_name)
 
     def test_no_file_error(self):
         with self.assertRaises(SystemExit):
-            self.suite_runner.cmd(
-                    {'verbose': True, 'testSuite': 'non_existant.yaml'})
+            self.suite_runner.cmd({'testSuite': 'non_existant.yaml'})
 
     def test_directory_error(self):
         file_path = tempfile.mkdtemp()
         with self.assertRaises(SystemExit):
-            self.suite_runner.cmd(
-                    {'verbose': True, 'testSuite': file_path})
+            self.suite_runner.cmd({'testSuite': file_path})
         os.rmdir(file_path)
 
 if __name__ == '__main__':
