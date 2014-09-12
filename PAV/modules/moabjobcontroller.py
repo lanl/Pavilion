@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """  Implementation of Moab Job Controller  """
 
-import sys, os
+import sys
+import os
 import subprocess
 import re
 from basejobcontroller import BaseJobController

@@ -5,4 +5,7 @@ include t1/*.bash
 include t1/i*
 include PAV/plugins/*.yapsy-plugin
 include PAV/scripts/*
-include README.* 
+include docs/*.txt
+recursive-include PAV/ README.* 
+exclude PAV/special_pkgs/mock.*
+exclude test 

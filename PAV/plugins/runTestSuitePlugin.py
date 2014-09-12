@@ -15,7 +15,6 @@ from testEntry import TestEntry
 from ldms import LDMS
 
 
-    
 class RunTestSuite(IPlugin):
     """ This implements the plug-in, or command, to run a suite of tests as
         defined in the users test suite configuration file.
@@ -58,12 +57,11 @@ class RunTestSuite(IPlugin):
             print "TestSuite search path -> " + os.path.dirname(os.path.realpath(args['testSuite']))
         
         try:
-            with open(args['testSuite']) as file:
+            with open(args['testSuite']) as af:
 
                 # Use the default (or master) test suite configuration from the same directory
                 #dts = os.path.dirname(os.path.realpath(args['testSuite'])) + "/default_test_config.yaml"
                 # Build the test configuration
-                #tc = YamlTestConfig(args['testSuite'], dts)
                 tc = YamlTestConfig(args['testSuite'])
                 if args.get('verbose'):
                     print "User test suite:"
@@ -86,8 +84,9 @@ class RunTestSuite(IPlugin):
                     test_type = te.get_type()
                     #print "my test type -> " + test_type
 
-                    test_variants = [(None)]
+                    test_variants = [None]
                     # get list of "new" test entries
+                    # launch a new process for each test variation or count
                     if "moab" in test_type:
                         test_variants = te.get_test_variations()
                         for test_entry in test_variants:
@@ -108,5 +107,5 @@ class RunTestSuite(IPlugin):
             sys.exit()
         
 
-if __name__=="__main__":
+if __name__ == "__main__":
     print RunTestSuite.__doc__
