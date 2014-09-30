@@ -21,16 +21,18 @@ class BaseJobController():
     def now(self):
         return datetime.datetime.now().strftime("%m-%d-%YT%H:%M:%S:%f")
 
+    def __init__(self, uid, configs, job_log_file, job_variation):
 
-    def __init__(self, name, configs, job_log_file, job_variation):
-
-        self.name = name
+        self.uid = uid
+        self.name = configs['name']
         self.configs = configs
         self.job_log_file = job_log_file
         self.job_variation = job_variation
         self.lh = self.configs['log_handle']
 
         self.logger = logging.getLogger('pth.runjob.' + self.__class__.__name__)
+
+        print "init of bjc"
 
         # verify command is executable early on
         mycmd = self.configs['source_location'] + "/" + self.configs['run']['cmd']
@@ -49,7 +51,6 @@ class BaseJobController():
         os.environ['GZ_TESTEXEC'] = self.configs['run']['cmd']
         os.environ['GZ_TEST_PARAMS'] = self.configs['run']['test_args']
         os.environ['PV_TEST_ARGS'] = self.configs['run']['test_args']
-
 
     def setup_working_space(self):
 
@@ -75,7 +76,6 @@ class BaseJobController():
             print 'Working Space: %s' % os.environ['PV_RUNHOME']
             self.logger.info('WS for %s: ' % self.lh + os.environ['PV_RUNHOME'])
             return
-
 
         # now setup and do the move
         os.environ['PV_RUNHOME'] = ws + "/" + self.name + "__" + run_cmd + "." + self.now()
@@ -118,14 +118,12 @@ class BaseJobController():
             self.logger.info(self.lh + " failed copying data to working space!, skipping job: " + self.name +
                                        "(Hint: check the job logfile)")
 
-
     def __str__(self):
         return 'instantiated %s object' % self.name
 
     # return the full path to where the logfile is located
     def get_results_directory(self):
         return os.path.dirname(self.job_log_file)
-
 
     # Print all the pertinent run data to the the job log file for later analysis.
     # Most of the <xxxx> stuff is for Gazebo backward compatibility
@@ -152,7 +150,7 @@ class BaseJobController():
     def build(self):
         # call the command that builds the users test/job
         bld_cmd = self.configs['source_location'] + "/" + self.configs['build']['cmd']
-        self.logger.info(self.lh + ': start build command: '+ bld_cmd)
+        self.logger.info(self.lh + ': start build command: ' + bld_cmd)
         os.system(bld_cmd)
         self.logger.info(self.lh + '%s build command complete ' % bld_cmd)
 
@@ -177,7 +175,7 @@ class BaseJobController():
 
         os.environ['GZ_RUNHOME'] = os.environ['PV_RUNHOME']
 
-        os.environ['GZ_LOG_FILE'] = os.environ["PV_JOB_RESULTS_LOG"]
+        os.environ['GZ_LOGFILE'] = os.environ["PV_JOB_RESULTS_LOG"]
 
         os.environ['PV_TEST_ARGS'] = self.configs['run']['test_args']
         os.environ['GZ_TEST_PARAMS'] = os.environ['PV_TEST_ARGS']

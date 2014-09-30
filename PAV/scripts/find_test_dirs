@@ -174,7 +174,6 @@ if ( $opts{a} ) {
 }
 chomp($startdate);
 
-
 ($hr, $min, $sec) = 0;
 $cal = "";
 $time ="";
@@ -254,15 +253,16 @@ foreach $d (@dirlist) {
 }
 
 
-if ( $opts{v} ) { print "dir res list: $res\n"; }
+if ( $opts{v} ) { print "dir res list:\n$res\n"; }
 
 my $res2;
 my @tmp;
 my $entry;
 my $cmd;
-my @complete_dirlist = split( "\n", $res );
-foreach $d (@complete_dirlist) {
-    if ( $opts{v} ) { print "Exploring $d\n"; }
+for (split /^/, $res) {
+    my $d = $_;
+    chomp $d;
+    if ( $opts{v} ) { print "Explore directory $d\n"; }
     if ( $opts{j} ne "" ) {
        my $jid = "_" . $opts{j} . "_";
        $cmd = "/bin/ls $d | grep $jid | xargs";
@@ -271,29 +271,39 @@ foreach $d (@complete_dirlist) {
     }
     $tmp = `$cmd`;
 
-
     my @tdirs = split( ' ', $tmp );
-   
     foreach $entry (@tdirs) {
-      chomp $entry;
-      # at this point all the test specific directories are collected
-      # put in a couple of checks to make sure we don't have bogus dirs
-      unless (-d "$d/$entry") {next;}
+      if ( $opts{v} ) { print "  check - $entry\n"; }
+
       my ($junk, $dateTime) = split /\./, $entry;
-      if ( $dateTime eq "" ) {next;}
-      my ($cal, $tzTime) = split /T/, $dateTime;
+      my ($cal, $entryTime) = split /T/, $dateTime;
       my ($yr, $mo, $day) = split /-/, $cal;
-      my ($entryTime, $tz) = split /-/, $tzTime; 
-      ($hr, $min, $sec) = split /:/, $entryTime;
-      my $testTime = timelocal( $sec, $min, $hr, $day, $mo - 1, $yr - 1900 );
-      if (( $testTime >= $sd) && ( $testTime <= $ed ) ) {
-      if ( $opts{v} ) { print "add $entry to result\n"; }
-        $res2 .= "$d/$entry\n";
+      my ($hr, $min, $sec, $msec) = split /:/, $entryTime;
+      #print "$hr, $min, $sec, $msec \n";
+      if ($sec < 60) {
+        my $testTime = timelocal( $sec, $min, $hr, $day, $mo - 1, $yr - 1900 );
+        #print "$testTime\n";
+        if (( $testTime >= $sd) && ( $testTime <= $ed ) ) {
+          if ( $opts{v} ) { print "add $d/$entry to final results\n"; }
+          print "$d/$entry\n";
+        }
       }
     }
 
 }
-$res2 =~ s/\n\n/\n/g;
-print "$res2";
+
+
+
+
+
+{
+    {
+      #chomp $entry;
+      # at this point all the test specific directories are collected
+      # put in a couple of checks to make sure we don't have bogus dirs
+      #unless (-d "$_/$entry") {next;}
+      #if ( $dateTime eq "" ) {next;}
+    }
+}
 
 exit;

@@ -17,7 +17,7 @@ class RawJobController(BaseJobController):
         # print the common log settings here right after the job is started
         self.save_common_settings()
 
-        # save some info so that scripts may use later on.
+        # store some info into ENV variables that jobs may need to use later on.
         self.setup_job_info()
 
         # build the exact command to run
@@ -53,7 +53,7 @@ class RawJobController(BaseJobController):
         text_file.write("{}\n".format("cleanup complete"))
         text_file.close()
 
-        print "<end>" , self.now()
+        print "<end>", self.now()
 
         # The trend_data file needs to be placed in the results dir
         # for Gazebo compatibility

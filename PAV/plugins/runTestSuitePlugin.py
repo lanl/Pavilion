@@ -33,8 +33,10 @@ class RunTestSuite(IPlugin):
         js_var = json.dumps(var)
         params = my_te.get_values()
         js_params = json.dumps(params)
-        self.logger.info('dispatch: %s, variation: (%s x %s)' % (my_te.name, n, p))
-        args = ["python", "./modules/runjob.py", my_te.name, js_params, js_var]
+        uid = my_te.get_id()
+        lh = uid + "-" + my_te.get_name()
+        self.logger.info('dispatch: %s, variation: (%s x %s)' % (lh, n, p))
+        args = ["python", "./modules/runjob.py", uid, js_params, js_var]
         subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 
 
@@ -65,7 +67,6 @@ class RunTestSuite(IPlugin):
                 tc = YamlTestConfig(args['testSuite'])
                 if args.get('verbose'):
                     print "User test suite:"
-                    utc = tc.get_user_test_config()
                     print "  %s" % utc
 
                 # get the "merged" test stanza for each test in the test suite
@@ -73,14 +74,15 @@ class RunTestSuite(IPlugin):
 
                 # Process and launch a new test for each test entry (stanza) in the test suite
                 # and its variations here.
-                for name, params in my_test_suite.iteritems():
+                for entry_id, params in my_test_suite.iteritems():
 
                     # This just defines where to find a different DTS, so
                     # skip this entry.
-                    if "DefaultTestSuite" in name:
+                    if "DefaultTestSuite" in entry_id:
                         continue
 
-                    te = TestEntry(name, params, args)
+                    te = TestEntry(entry_id, params, args)
+
                     test_type = te.get_type()
                     #print "my test type -> " + test_type
 
@@ -103,7 +105,7 @@ class RunTestSuite(IPlugin):
                             self.job_dispatcher(te)
 
         except EnvironmentError as err:
-            print "  Error: %s" % err
+            print "  Error: could not access test suite %s" % args['testSuite']
             sys.exit()
         
 
