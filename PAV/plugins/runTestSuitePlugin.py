@@ -66,7 +66,7 @@ import time
 
 from yapsy.IPlugin import IPlugin
 from testConfig import YamlTestConfig
-from testEntry import TestEntry, MoabTestEntry, RawTestEntry
+from testEntry import TestEntry, MoabTestEntry, RawTestEntry, SlurmTestEntry
 
 
 class RunTestSuite(IPlugin):
@@ -83,6 +83,8 @@ class RunTestSuite(IPlugin):
     def job_dispatcher(self, my_te, in_args):
         #print "dispatch " + my_te.get_id() + " : "
         #print my_te.this_dict[my_te.get_id()]
+
+
         params = my_te.get_values()
         js_params = json.dumps(params)
         uid = my_te.get_id()
@@ -91,7 +93,10 @@ class RunTestSuite(IPlugin):
         runjob_cmd = os.environ['PVINSTALL'] + "/PAV/modules/runjob.py"
         master_log_file = os.environ['PV_LOG']
         args = ["python", runjob_cmd, uid, js_params, master_log_file]
+
+
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+
         if in_args['serial']:
             output, errors = p.communicate()
             if p.returncode or errors:
@@ -186,6 +191,7 @@ class RunTestSuite(IPlugin):
                     #print "plenty of room to run"
                     # launch a new process for each test variation and/or count
                     for test_entry in te.get_test_variations():
+
                         # initialize a unique LDMS for each job
                         os.environ['LDMS_START_CMD'] = ''
                         if args['ldms'] or ('ldms' in test_suite_entry and test_suite_entry['ldms']['state']):

@@ -103,7 +103,7 @@ class SlurmJobController(JobController):
         slurm_cmd += " -J " + self.name
 
         # get time limit, if specified
-        time_lim = self.configs['slurm']['time']
+        time_lim = self.configs['slurm']['time_limit']
         slurm_cmd += " -t " + time_lim
 
         # add in a target segment (partition in Slurm vernacular), if specified
@@ -112,8 +112,8 @@ class SlurmJobController(JobController):
             slurm_cmd += " -p " + ts
 
         # variation passed as arg0 - nodes, arg1, ppn
-        nnodes = str(self.configs['slurm']['num_nodes'])
-        ppn = str(self.configs['slurm']['procs_per_node'])
+        nnodes = str(self.configs["slurm"]["num_nodes"])
+        ppn = str(self.configs["slurm"]["procs_per_node"])
 
         self.logger.info(self.lh + " : nnodes=" + nnodes)
 
@@ -137,9 +137,9 @@ class SlurmJobController(JobController):
         self.setup_job_info()
 
         # setup unique Slurm stdout and stderr file names
-        se = os.environ['PV_JOB_RESULTS_LOG_DIR'] + "/sterr-%j.out"
-        so = os.environ['PV_JOB_RESULTS_LOG_DIR'] + "/stdout-%j.out"
-        slurm_cmd += "-o " + so + " -e " + se
+        se = os.environ['PV_JOB_RESULTS_LOG_DIR'] + "/slurm-%j.out"
+        so = os.environ['PV_JOB_RESULTS_LOG_DIR'] + "/slurm-%j.out"
+        slurm_cmd += " -o " + so + " -e " + se
 
         run_cmd = os.environ['PV_RUNHOME'] + "/" + self.configs['run']['cmd']
         os.environ['USER_CMD'] = run_cmd
