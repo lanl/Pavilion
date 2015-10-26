@@ -96,9 +96,9 @@ class SlurmJobController(JobController):
         slurm_cmd = "sbatch"
 
         # specified nodenames
-        if 'specific_nodes' in self.configs['slurm']:
-            slurm_cmd += ' -w ' + str(self.configs['slurm']['specific_nodes'])
-            print "<specific_nodes> " + str( self.configs['slurm']['specific_nodes'] )
+        if 'node_list' in self.configs['slurm']:
+            slurm_cmd += ' -w ' + str(self.configs['slurm']['node_list'])
+            print "<node_list> " + str( self.configs['slurm']['node_list'] )
 
         # add test name
         slurm_cmd += " -J " + self.name
@@ -108,9 +108,9 @@ class SlurmJobController(JobController):
         slurm_cmd += " -t " + time_lim
 
         # add in a target segment (partition in Slurm vernacular), if specified
-        if 'partition' in self.configs['slurm']:
-            slurm_cmd += " -p " + str(self.configs['slurm']['partition'])
-            print "<partition> " + str( self.configs['slurm']['partition'] )
+        if 'target_seg' in self.configs['slurm']:
+            slurm_cmd += " -p " + str(self.configs['slurm']['target_seg'])
+            print "<target_seg> " + str( self.configs['slurm']['target_seg'] )
 
         nnodes = str(self.configs["slurm"]["num_nodes"])
         os.environ['PV_NNODES'] = nnodes
