@@ -279,15 +279,15 @@ class SlurmTestEntry(TestEntry):
         # grab the fields that may have multiple choices from the
         # original "seed" test entry
         l1 = self.this_dict[self.id]['slurm']['num_nodes']
-
         if isinstance(l1, int):
             l1 = [l1]
         elif isinstance(l1, str):
             l1 = l1.split(',')
+
         l2 = self.this_dict[self.id]['slurm']['procs_per_node']
         if isinstance(l2, int):
             l2 = [l2]
-        elif isinstance(l1, str):
+        elif isinstance(l2, str):
             l2 = l2.split(',')
         try:
             l3 = self.this_dict[self.id]['run']['test_args']

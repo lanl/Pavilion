@@ -95,9 +95,10 @@ class SlurmJobController(JobController):
 
         slurm_cmd = "sbatch"
 
-        # handle optionally specified queue
-        if self.configs['slurm']['queue']:
-            slurm_cmd += self.configs['slurm'][''] + " "
+        # specified nodenames
+        if 'specific_nodes' in self.configs['slurm']:
+            slurm_cmd += ' -w ' + str(self.configs['slurm']['specific_nodes'])
+            print "<specific_nodes> " + str( self.configs['slurm']['specific_nodes'] )
 
         # add test name
         slurm_cmd += " -J " + self.name
@@ -107,28 +108,27 @@ class SlurmJobController(JobController):
         slurm_cmd += " -t " + time_lim
 
         # add in a target segment (partition in Slurm vernacular), if specified
-        if self.configs['slurm']['target_seg']:
-            ts = self.configs['slurm']['target_seg']
-            slurm_cmd += " -p " + ts
+        if 'partition' in self.configs['slurm']:
+            slurm_cmd += " -p " + str(self.configs['slurm']['partition'])
+            print "<partition> " + str( self.configs['slurm']['partition'] )
 
-        # variation passed as arg0 - nodes, arg1, ppn
         nnodes = str(self.configs["slurm"]["num_nodes"])
-        ppn = str(self.configs["slurm"]["procs_per_node"])
-
-        self.logger.info(self.lh + " : nnodes=" + nnodes)
-
-        pes = int(ppn) * int(nnodes)
-
-        self.logger.info(self.lh + " : npes=" + str(pes))
-        os.environ['PV_PESPERNODE'] = ppn
-
-        # number of nodes to allocate
         os.environ['PV_NNODES'] = nnodes
         print "<nnodes> " + nnodes
-        slurm_cmd += " -N " + nnodes
+        self.logger.info(self.lh + " : nnodes=" + nnodes)
 
+        ppn = str(self.configs["slurm"]["procs_per_node"])
+        os.environ['PV_PESPERNODE'] = ppn
+        print "<ppn> " + ppn
+        self.logger.info(self.lh + " : ppn=" + ppn)
+
+        pes = int(ppn) * int(nnodes)
         os.environ['PV_NPES'] = str(pes)
         print "<npes> " + str(pes)
+        self.logger.info(self.lh + " : npes=" + str(pes))
+
+        # number of nodes to allocate
+        slurm_cmd += " -N " + nnodes
 
         # print the common log settings here right after the job is started
         self.save_common_settings()
@@ -150,8 +150,10 @@ class SlurmJobController(JobController):
         slurm_cmd += " " + os.environ['PVINSTALL'] + "/PAV/modules/slurm_job_handler.py"
 
         if SlurmJobController.is_slurm_system():
+
             self.logger.info(self.lh + " : " + slurm_cmd)
             # call to invoke real Slurm command
+
             output = subprocess.check_output(slurm_cmd, shell=True)
             # Finds the jobid in the output from msub.
             match = re.search("^((Slurm.)?(\d+))[\r]?$",  output, re.IGNORECASE | re.MULTILINE)

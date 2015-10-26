@@ -100,6 +100,9 @@ def main():
       Routine called by msub that calls the user's job script/program.
       Will also start LDMS if requested.
     """
+
+    print "~~~ slurm_job_handler main"
+
     cmd = "cd " + os.environ['PV_RUNHOME'] + "; " + \
         os.environ['PVINSTALL'] + "/PAV/scripts/mytime " + os.environ['USER_CMD']
 
