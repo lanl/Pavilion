@@ -96,9 +96,23 @@ class SlurmJobController(JobController):
         slurm_cmd = "sbatch"
 
         # specified nodenames
+        length_of_node_list = 0
         if 'node_list' in self.configs['slurm']:
-            slurm_cmd += ' -w ' + str(self.configs['slurm']['node_list'])
-            print "<node_list> " + str( self.configs['slurm']['node_list'] )
+            node_list = str(self.configs['slurm']['node_list'])
+            slurm_cmd += ' -w ' + node_list
+            # need the count of nodes or sbatch complains, you can use nnodes internally though
+
+            # does it use hostlist representation?
+            if "[" in node_list and "]" in node_list:
+                for sublist in node_list.split("[")[1].split("]")[0].split(","):
+                    # is it a range?
+                    if "-" in sublist:
+                        length_of_node_list = length_of_node_list + int(sublist.split("-")[1]) - int(sublist.split("-")[0]) + 1
+                    else:
+                        length_of_node_list += 1
+            else:
+                length_of_node_list = len(node_list.split(","))
+            print "<node_list> " + node_list + " = " + str(length_of_node_list) + " nodes"
 
         # add test name
         slurm_cmd += " -J " + self.name
@@ -127,7 +141,10 @@ class SlurmJobController(JobController):
         print "<npes> " + str(pes)
         self.logger.info(self.lh + " : npes=" + str(pes))
 
-        # number of nodes to allocate
+        # number of nodes to allocate must be == length of node list
+        if not length_of_node_list == int(nnodes):
+            print "Error: node_list and num_nodes do not agree!"
+
         slurm_cmd += " -N " + nnodes
 
         # print the common log settings here right after the job is started
