@@ -55,17 +55,6 @@
 
 
 """  Implementation of Slurm Job Controller
-
-     **  Just a hacked up version of Moab Job controller for now,
-     needs real work from knowledgeable Slurm person. Thus, some
-     of the slurm_cmd arguments may or may not make sense.
-
-     Environment vars that start with PV_ and any print
-     statements with "<>" need to be left in, but with
-     appropriate values of course. These items will be
-     added to the job's log file and are thus needed by
-     Pavilion for job analysis.
-
 """
 
 import sys
@@ -172,7 +161,7 @@ class SlurmJobController(JobController):
             # call to invoke real Slurm command
 
             output = subprocess.check_output(slurm_cmd, shell=True)
-            # Finds the jobid in the output from msub.
+            # Finds the jobid in the output.
             match = re.search("^((Slurm.)?(\d+))[\r]?$",  output, re.IGNORECASE | re.MULTILINE)
             jid = 0
             if match.group(1):

@@ -53,12 +53,6 @@
 #
 #  ###################################################################
 
-
-"""
-# Functions similar to setUpandRun in Gazebo.
-# Application that is called by msub.
-"""
-
 import sys
 import os
 from subprocess import Popen, PIPE
@@ -97,11 +91,9 @@ def get_node_list():
 
 def main():
     """
-      Routine called by msub that calls the user's job script/program.
+      calls the user's job script/program.
       Will also start LDMS if requested.
     """
-
-    print "~~~ slurm_job_handler main"
 
     cmd = "cd " + os.environ['PV_RUNHOME'] + "; " + \
         os.environ['PVINSTALL'] + "/PAV/scripts/mytime " + os.environ['USER_CMD']

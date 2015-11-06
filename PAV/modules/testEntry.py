@@ -336,11 +336,7 @@ class SlurmTestEntry(TestEntry):
 
     @staticmethod
     def get_active_jobs(ts):
-        """
-        Find the number of jobs queued or running on the system.
-        implement:  `mdiag -j | grep $me | wc -l`
-        Possibly use a target segment, or partition also
-        """
+
         me = getpass.getuser()
 
         cat = subprocess.Popen(['squeue'],
