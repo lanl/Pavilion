@@ -171,8 +171,7 @@ class SlurmJobController(JobController):
         se = os.environ['PV_JOB_RESULTS_LOG_DIR'] + "/slurm-%j.out"
         so = os.environ['PV_JOB_RESULTS_LOG_DIR'] + "/slurm-%j.out"
         slurm_cmd += " -o " + so + " -e " + se
-
-        run_cmd = os.environ['PV_RUNHOME'] + "/" + self.configs['run']['cmd']
+        run_cmd = os.environ['PV_RUNHOME'] + "/" + self.configs['run']['cmd'] + " " + self.configs['run']['test_args']
         os.environ['USER_CMD'] = run_cmd
 
         # Executable is slurm_job_handler.py which is just the wrapper to call the
