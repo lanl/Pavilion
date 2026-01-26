@@ -1,6 +1,10 @@
 #Pavilion
 =========
 
+## This Version of Pavilion is Deprecated
+The new repository is at: https://github.com/hpc/pavilion2
+Documentation is at: https://pavilion2.readthedocs.io/en/latest/
+
 LA-CC-15-041
 
 Pavilion is a software framework for running and analyzing jobs/tests targeting HPC systems.
