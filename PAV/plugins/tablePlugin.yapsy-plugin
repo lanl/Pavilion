@@ -1,0 +1,9 @@
+[Core]
+Name = table
+Module = tablePlugin
+
+[Documentation]
+Author = Ben Casses
+Version = 0.1
+Website = http://www.llnl.gov
+Description = Get the results of test runs with controlled table output.
